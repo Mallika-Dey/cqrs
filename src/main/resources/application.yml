@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/axonDB?serverTimezone=UTC
+    username: postgres
+    password: 12345
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+# Axon Server event store configuration
+axon:
+  eventhandling:
+    seg-mapping: tracking
+    processors:
+      product-events:
+        source: default
+        mode: tracking
+        threads: 1
+
+
