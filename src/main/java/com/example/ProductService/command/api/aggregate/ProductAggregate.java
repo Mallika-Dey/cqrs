@@ -1,8 +1,10 @@
 package com.example.ProductService.command.api.aggregate;
 
 import com.example.ProductService.command.api.commands.CreateProductCommand;
+import com.example.ProductService.command.api.commands.DeleteProductCommand;
 import com.example.ProductService.command.api.commands.UpdateProductCommand;
 import com.example.ProductService.command.api.events.ProductCreatedEvent;
+import com.example.ProductService.command.api.events.ProductDeletedEvent;
 import com.example.ProductService.command.api.events.ProductUpdatedEvent;
 import com.fasterxml.jackson.databind.util.BeanUtil;
 import lombok.NoArgsConstructor;
@@ -55,6 +57,15 @@ public class ProductAggregate {
         AggregateLifecycle.apply(productUpdatedEvent);
     }
 
+    @CommandHandler
+    public ProductAggregate(DeleteProductCommand deleteProductCommand) {
+        AggregateLifecycle.apply(ProductDeletedEvent
+                .builder()
+                .aggregateId(deleteProductCommand.getAggregateId())
+                .deleteProductId(deleteProductCommand.getDeleteProductId())
+                .build());
+    }
+
 
     @EventSourcingHandler
     public void on(ProductCreatedEvent productCreatedEvent) {
@@ -72,5 +83,8 @@ public class ProductAggregate {
         this.name = productUpdatedEvent.getName();
     }
 
-
+    @EventSourcingHandler
+    public void deleteProduct(ProductDeletedEvent productDeletedEvent) {
+        this.aggregateId = productDeletedEvent.getAggregateId();
+    }
 }
